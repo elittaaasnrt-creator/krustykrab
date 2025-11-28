@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Menu — Krusty Krab</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="customer-page">
+  <header class="topbar">
+    <img src="krustykrablogo.png" alt="logo" class="top-logo" />
+    <div class="top-right">
+      <span id="userName"></span>
+      <button id="logoutBtn" class="btn small">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Menu Krusty Krab</h1>
+    <p>Ini demo tampilan menu untuk customer / guest. Nanti kita bisa tambahkan daftar menu, keranjang, dan checkout.</p>
+
+    <div class="menu-grid" id="menuGrid">
+      <!-- Contoh item (kamu nantinya akan render dinamis dari backend) -->
+      <div class="menu-item">
+        <img src="assets/krabby-patty.jpg" alt="Krabby Patty" />
+        <h3>Krabby Patty</h3>
+        <p class="price">Rp12.000</p>
+        <button class="btn small">Tambah</button>
+      </div>
+      <div class="menu-item">
+        <img src="assets/kelp-shake.jpg" alt="Kelp Shake" />
+        <h3>Kelp Shake</h3>
+        <p class="price">Rp8.000</p>
+        <button class="btn small">Tambah</button>
+      </div>
+    </div>
+  </main>
+
+<script>
+  // allow both logged in customer and guest to view
+  const cur = JSON.parse(localStorage.getItem('kk_currentUser') || 'null');
+  const isGuest = localStorage.getItem('kk_guest') === 'true';
+  if (!cur && !isGuest) {
+    // if no session, still allow but optional: redirect to login
+    // window.location.href = 'login.html';
+  }
+
+  document.getElementById('userName').textContent = cur ? cur.username + (cur.role ? ' ('+cur.role+')' : '') : 'Guest';
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('kk_currentUser');
+    localStorage.removeItem('kk_guest');
+    window.location.href = 'login.html';
+  });
+</script>
+</body>
+</html>

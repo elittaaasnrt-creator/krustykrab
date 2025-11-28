@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Krusty Krab — Sign Up</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    <img src="krustykrablogo.png" alt="logo" class="auth-logo" />
+    <h2>Sign Up</h2>
+    <p class="auth-sub">Buat akun baru — pilih role Admin atau Customer</p>
+
+    <form id="registerForm" onsubmit="return false;">
+      <input id="reg-email" type="email" placeholder="Email" required />
+      <input id="reg-username" type="text" placeholder="Username" required />
+      <input id="reg-password" type="password" placeholder="Password" required />
+      <input id="reg-confirm" type="password" placeholder="Konfirmasi Password" required />
+
+      <!-- Pilihan role: dropdown (compact & jelas) -->
+      <select id="reg-role" required>
+        <option value="">-- Daftar Sebagai --</option>
+        <option value="customer">Customer</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <button id="btnRegister" class="btn">Sign Up</button>
+    </form>
+
+    <p class="small-links">
+      Sudah daftar? <a href="login.html">Sign In</a>
+    </p>
+  </div>
+
+<script>
+  function getUsers(){ const raw = localStorage.getItem('kk_users'); return raw? JSON.parse(raw): []; }
+  function saveUsers(arr){ localStorage.setItem('kk_users', JSON.stringify(arr)); }
+
+  document.getElementById('btnRegister').addEventListener('click', () => {
+    const email = document.getElementById('reg-email').value.trim();
+    const username = document.getElementById('reg-username').value.trim();
+    const pass = document.getElementById('reg-password').value;
+    const conf = document.getElementById('reg-confirm').value;
+    const role = document.getElementById('reg-role').value;
+
+    if (!email || !username || !pass || !conf || !role) { alert('Lengkapi semua field'); return; }
+    if (pass !== conf) { alert('Password dan konfirmasi tidak sama'); return; }
+    if (pass.length < 6) { alert('Password minimal 6 karakter'); return; }
+
+    const users = getUsers();
+    if (users.find(u => u.username === username)) { alert('Username sudah dipakai'); return; }
+    if (users.find(u => u.email === email)) { alert('Email sudah terdaftar'); return; }
+
+    users.push({ email, username, password: pass, role });
+    saveUsers(users);
+
+    alert('Pendaftaran berhasil! Silakan login.');
+    window.location.href = 'login.html';
+  });
+</script>
+
+</body>
+</html>

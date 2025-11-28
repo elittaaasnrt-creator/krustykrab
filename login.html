@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Krusty Krab — Sign In</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    <img src="krustykrablogo.png" alt="logo" class="auth-logo" />
+    <h2>Sign In</h2>
+    <p class="auth-sub">Selamat datang di Krusty Krab — order cepat & mudah!</p>
+
+    <form id="loginForm" onsubmit="return false;">
+      <input id="login-username" type="text" placeholder="Username" required />
+      <input id="login-password" type="password" placeholder="Password" required />
+      <button id="btnLogin" class="btn">Sign In</button>
+    </form>
+
+    <p class="small-links">
+      Belum punya akun? <a href="register.html">Sign Up</a>
+    </p>
+
+    <!-- Guest link kecil di bawah, sesuai pilihanmu (B) -->
+    <p class="guest-link">
+      Tidak mau buat akun? <a href="#" id="guestBtn">Continue as Guest →</a>
+    </p>
+  </div>
+
+<script>
+  // Helper: ambil users dari localStorage
+  function getUsers() {
+    const raw = localStorage.getItem('kk_users');
+    return raw ? JSON.parse(raw) : [];
+  }
+
+  // Simulasi login
+  document.getElementById('btnLogin').addEventListener('click', () => {
+    const u = document.getElementById('login-username').value.trim();
+    const p = document.getElementById('login-password').value;
+    if (!u || !p) { alert('Isi username & password'); return; }
+
+    const users = getUsers();
+    const found = users.find(x => x.username === u && x.password === p);
+    if (!found) {
+      alert('Username atau password salah. Coba lagi atau daftar dulu.');
+      return;
+    }
+
+    // save current user session (frontend demo)
+    localStorage.setItem('kk_currentUser', JSON.stringify({ username: found.username, role: found.role }));
+    // redirect sesuai role
+    if (found.role === 'admin') {
+      window.location.href = 'admin_dashboard.html';
+    } else {
+      window.location.href = 'customer_menu.html';
+    }
+  });
+
+  // Guest mode: set flag dan redirect ke customer page
+  document.getElementById('guestBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('kk_currentUser');
+    localStorage.setItem('kk_guest', 'true');
+    window.location.href = 'customer_menu.html';
+  });
+</script>
+
+</body>
+</html>
